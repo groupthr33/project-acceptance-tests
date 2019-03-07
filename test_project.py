@@ -19,15 +19,11 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that course has been persisted in storage
-
     def test_course_wrong_number_of_args(self):
         actual_response = self.project.command("course CS361")
         expected_response = "course must have exactly 2 arguments. Correct usage: 'course <courseid> <coursename>"
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that course has not been persisted in storage
 
     def test_course_already_exists(self):
         # put course in storage with id CS111
@@ -37,15 +33,11 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that course with ID CS111 has not been changed in storage
-
     def test_course_id_wrong_format(self):
         actual_response = self.project.command("course 534CS 'test course'")
         expected_response = "Course ID not valid. Please check format."
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that course with ID 534CS has not been changed in storage
 
     def test_cr_account_happy_path(self):
         actual_response = self.project.command("cr_account mrwatts matt admin")
@@ -53,15 +45,11 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that account with username mrwatts has been persisted in storage
-
     def test_cr_account_wrong_number_of_args(self):
         actual_response = self.project.command("cr_account mrwatts")
         expected_response = "cr_account must have exactly 2 arguments. Correct usage: cr_account <role> <user_name>"
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that account with username mrwatts has been persisted in storage with correct roles
 
     def test_cr_account_already_exists(self):
         # put account with user_name mrwatts in storage
@@ -71,23 +59,17 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that account with username mrwatts has not been changed in storage
-
     def test_cr_account_invalid_role(self):
         actual_response = self.project.command("cr_account mrwatts matt superman")
         expected_response = "Superman is not a valid role. Valid roles are: supervisor, admin, ta, and instructor"
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that account with username mrwatts has not been changed in storage
-
     def test_cr_account_multiple_roles(self):
         actual_response = self.project.command("cr_account mrwatts matt admin ta")
         expected_response = "Account created for mrwatts with roles: admin, ta."
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that account with username mrwatts has been persisted in storage with correct roles
 
     def test_del_account_happy_path(self):
         # put account with user_name mrwatts in storage
@@ -96,8 +78,6 @@ class TestProject(unittest.TestCase):
         expected_response = "Account for mrwatts deleted."
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that account with username mrwatts does not exist in storage
 
     def test_del_account_does_not_exist(self):
         actual_response = self.project.command("del_account dne")
@@ -119,8 +99,6 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that account with user_name mrwatts has been update with correct phone number
-
     def test_edit_account_multiple_fields(self):
         # put account with user_name mrwatts in storage
 
@@ -128,8 +106,6 @@ class TestProject(unittest.TestCase):
         expected_response = "mrwatts phone and home updated."
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that account with user_name mrwatts has been update with correct phone number
 
     def test_edit_account_wrong_number_of_arguments(self):
         actual_response = self.project.command("edit_account mrwatts")
@@ -162,9 +138,6 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that instructor has course with ID cs417 in courses property
-        # assert that course has instructor assigned with user_name theinstructor
-
     def test_assign_ins_wrong_number_of_args(self):
         actual_response = self.project.command("assign_ins theinstructor")
         expected_response = "assign_ins must have exactly 2 arguments. Correct usage: assign_ins <user_name> <courseid>"
@@ -179,8 +152,6 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that course with ID cs417 has not been updated
-
     def test_assign_ins_course_does_not_exist(self):
         # put instructor with user_name theinstructor in storage
 
@@ -188,8 +159,6 @@ class TestProject(unittest.TestCase):
         expected_response = "Course with ID cs417 does not exist."
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that instructor with user_name theinstructor has not been updated
 
     def test_assign_ins_instructor_is_not_an_instructor(self):
         # put admin with user_name justanadmin in storage
@@ -199,9 +168,6 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that user with user_name justanadmin has not been updated
-        # assert that course with ID cs417 has not been updated
-
     def test_assign_ta_happy_path(self):
         # put course with ID cs417 in storage
         # put ta with user_name theta in storage
@@ -210,9 +176,6 @@ class TestProject(unittest.TestCase):
         expected_response = "theta assigned to cs417"
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that ta has course with ID cs417 in courses property
-        # assert that course has ta assigned with user_name theta
 
     def test_assign_ta_wrong_number_of_args(self):
         actual_response = self.project.command("assign_ins theta")
@@ -228,8 +191,6 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that course with ID cs417 has not been updated
-
     def test_assign_ta_course_does_not_exist(self):
         # put ta with user_name theta in storage
 
@@ -237,8 +198,6 @@ class TestProject(unittest.TestCase):
         expected_response = "Course with ID cs417 does not exist."
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that ta with user_name theta has not been updated
 
     def test_assign_ta_ta_is_not_a_ta(self):
         # put admin with user_name justanadmin in storage
@@ -248,9 +207,6 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-        # assert that user with user_name justanadmin has not been updated
-        # assert that course with ID cs417 has not been updated
-
     def test_assign_ta_with_section(self):
         # put ta with user_name theta in storage
         # put class with ID cs417 in storage (with lab section 111 in labsections field)
@@ -258,12 +214,9 @@ class TestProject(unittest.TestCase):
 
 
         actual_response = self.project.command("assign_ta theta cs417 -s 111")
-        expected_response = "User theta does assigned to cs418 labsection 111."
+        expected_response = "User theta assigned to cs418 labsection 111."
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that user with user_name theta has labsection 111 assigned
-        # assert that course with ID cs417 theta in list of TAs
 
     def test_assign_ta_section_does_not_exist(self):
         # put ta with user_name theta in storage
@@ -273,9 +226,6 @@ class TestProject(unittest.TestCase):
         expected_response = "Section 111 is not a valid session for cs417. "
 
         self.assertEqual(expected_response, actual_response)
-
-        # assert that user with user_name theta has not been updated
-        # assert that course with ID cs417 has not been updated
 
     def test_assignments(self):
         # TODO
