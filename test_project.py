@@ -4,9 +4,9 @@ from project import Project
 
 class TestProject(unittest.TestCase):
 
-    def setUpClass(cls):
+    # def setUpClass(self):
         # open connection to storage
-        pass
+        # pass
 
     def setUp(self):
         self.project = Project()
