@@ -1,8 +1,6 @@
 import unittest
 from project import Project
 
-# TODO: test all methods when not logged in, test all methods for correct privileges
-
 
 class TestProject(unittest.TestCase):
 
@@ -12,6 +10,31 @@ class TestProject(unittest.TestCase):
 
     def setUp(self):
         self.project = Project()
+        self.commands = ["course", "cr_account"] # TODO: add all commands (with args)
+        self.roles = ["admin", "supervisor", "ta", "instructor"]
+
+        # TODO: update to reflect actual privileges
+        self.allowed_commands = {
+            "admin": ["course", "cr_account"],
+            "supervisor": ["course", "cr_account"],
+            "ta": ["course", "cr_account"],
+            "instructor":["course", "cr_account"]
+        }
+
+    def test_logged_out(self):
+        responses = []
+        for command in self.commands:
+            responses.append(self.project.command(command))
+
+        for response in responses:
+            self.assertEqual("You need to log in first.", response)
+
+    def test_privileges(self):
+        for role in self.roles:
+            for command in self.commands:
+                response = self.project.command(command)
+                if response == "You don't have privileges.":
+                    self.assertEqual(command in self.allowed_commands[role], False)
 
     def test_course_happy_path(self):
         actual_response = self.project.command("course CS361 'Intro to Software Eng.'")
@@ -125,9 +148,35 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-    def test_notify(self):
-        # TODO
-        pass
+    def test_notify_all(self):
+
+        actual_response = self.project.command("notify mySubject myContent")
+        expected_response = "All users have been notified."
+
+        self.assertEqual(expected_response, actual_response)
+
+    def test_notify_one_user(self):
+        # put user with username jroth in storage
+
+        actual_response = self.project.command("notify mySubject myContent -u jroth")
+        expected_response = "User jroth has been notified."
+
+        self.assertEqual(expected_response, actual_response)
+
+    def test_notify_multi_user(self):
+        # put users with username jroth and mstevens in storage
+
+        actual_response = self.project.command("notify mySubject myContent -u jroth mstevens")
+        expected_response = "2 users have been notified."
+
+        self.assertEqual(expected_response, actual_response)
+
+    def test_notify_user_does_not_exist(self):
+
+        actual_response = self.project.command("notify mySubject myContent -u jroth mstevens")
+        expected_response = "User jroth does not exist."
+
+        self.assertEqual(expected_response, actual_response)
 
     def test_assign_ins_happy_path(self):
         # put course with ID cs417 in storage
@@ -212,7 +261,6 @@ class TestProject(unittest.TestCase):
         # put class with ID cs417 in storage (with lab section 111 in labsections field)
         # put lab section with ID 111 in storage (with cs417 in course field)
 
-
         actual_response = self.project.command("assign_ta theta cs417 -s 111")
         expected_response = "User theta assigned to cs418 labsection 111."
 
@@ -227,13 +275,30 @@ class TestProject(unittest.TestCase):
 
         self.assertEqual(expected_response, actual_response)
 
-    def test_assignments(self):
-        # TODO
-        pass
+    def test_course_assignments(self):
+        # put instructor with username theteacher in storage
+        # put courses with instructor theteacher in storage
 
-    def test_contacts(self):
-        # TODO
-        pass
+        actual_response = self.project.command("course_assignments")
+        expected_response = "CS417 001, CS361 001"
+
+        self.assertEqual(expected_response, actual_response)
+
+    def test_ta_assignments(self):
+        # put ta with username the_ta in storage
+        # put lab_section with ta field set to the_ta
+        actual_response = self.project.command("ta_assignments")
+        expected_response = "the_ta: CS417 008, CS361 009"
+
+        self.assertEqual(expected_response, actual_response)
+
+    def test_contact(self):
+        # put user with user_name theuser in storage
+
+        actual_response = self.project.command("contact theuser")
+        expected_response = "theuser John 5551234 theuser@uwm.edu"
+
+        self.assertEqual(expected_response, actual_response)
 
     def test_login_happy_path(self):
         # put user with user_name theuser and password thepassword in storage
@@ -253,7 +318,6 @@ class TestProject(unittest.TestCase):
         self.assertEqual(expected_response, actual_response)
 
         # assert user does not have access to other any functionality
-
 
     def test_login_incorrect_password(self):
         # put user with user_name theuser and password thepassword in storage
